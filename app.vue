@@ -95,8 +95,11 @@ const computeSelectedNames = () => {
         </div>
       </div>
       <button class="primary" @click="computeSelectedNames">Find Names</button>
-      <div>
-        {{ selectedNames }}
+      <div class="cards-container">
+        <h4 v-for="name in selectedNames" class="card">
+          {{ name }}
+        </h4>
+        <p></p>
       </div>
     </div>
   </div>
@@ -161,5 +164,30 @@ h1 {
   margin-top: 1rem;
   cursor: pointer;
   border: 0;
+}
+
+.cards-container {
+  display: flex;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  min-width: 32.28%;
+  background: #1b3c8a;
+  color: #fff;
+  border-radius: 1rem;
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  padding: 1.5rem 0;
+}
+
+.card p {
+  position: absolute;
+  top: -30%;
+  left: 92.5%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.178);
 }
 </style>
