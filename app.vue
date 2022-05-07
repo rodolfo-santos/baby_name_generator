@@ -1,19 +1,31 @@
 <script lang="ts" setup>
-type TGender = 'Girl' | 'Boy' | 'Unisex';
-type TPopularity = 'Trendy' | 'Unique';
-type TLength = 'Long' | 'All' | 'Short';
+import { EGender, EPopularity, ELength, names } from '@/data';
 
 interface IOptions {
-  gender: TGender;
-  popularity: TPopularity;
-  length: TLength;
+  gender: EGender;
+  popularity: EPopularity;
+  length: ELength;
 }
 
 const options = reactive<IOptions>({
-  gender: 'Girl',
-  popularity: 'Unique',
-  length: 'Short'
+  gender: EGender.GIRL,
+  popularity: EPopularity.TRENDY,
+  length: ELength.ALL
 });
+
+const selectedNames = ref<String[]>([]);
+
+const computeSelectedNames = () => {
+  const filteredNames = names
+    .filter((name) => name.gender === options.gender)
+    .filter((name) => name.popularity === options.popularity)
+    .filter((name) => {
+      if (options.length === ELength.ALL) return true;
+      return name.length === options.length;
+    });
+
+  selectedNames.value = filteredNames.map((name) => name.name);
+};
 </script>
 
 <template>
@@ -24,16 +36,22 @@ const options = reactive<IOptions>({
       <div class="option-container">
         <h4>1) Choose a gender</h4>
         <div class="option-buttons">
-          <button class="option option-left" :class="options.gender === 'Boy' && 'option-active'" @click="options.gender = 'Boy'">
+          <button
+            class="option option-left"
+            :class="options.gender === EGender.BOY && 'option-active'"
+            @click="options.gender = EGender.BOY">
             Boy
           </button>
-          <button class="option" :class="options.gender === 'Unisex' && 'option-active'" @click="options.gender = 'Unisex'">
+          <button
+            class="option"
+            :class="options.gender === EGender.UNISEX && 'option-active'"
+            @click="options.gender = EGender.UNISEX">
             Unisex
           </button>
           <button
             class="option option-right"
-            :class="options.gender === 'Girl' && 'option-active'"
-            @click="options.gender = 'Girl'">
+            :class="options.gender === EGender.GIRL && 'option-active'"
+            @click="options.gender = EGender.GIRL">
             Girl
           </button>
         </div>
@@ -44,14 +62,14 @@ const options = reactive<IOptions>({
         <div class="option-buttons">
           <button
             class="option option-left"
-            :class="options.popularity === 'Trendy' && 'option-active'"
-            @click="options.popularity = 'Trendy'">
+            :class="options.popularity === EPopularity.TRENDY && 'option-active'"
+            @click="options.popularity = EPopularity.TRENDY">
             Trendy
           </button>
           <button
             class="option option-right"
-            :class="options.popularity === 'Unique' && 'option-active'"
-            @click="options.popularity = 'Unique'">
+            :class="options.popularity === EPopularity.UNIQUE && 'option-active'"
+            @click="options.popularity = EPopularity.UNIQUE">
             Unique
           </button>
         </div>
@@ -61,18 +79,24 @@ const options = reactive<IOptions>({
         <div class="option-buttons">
           <button
             class="option option-left"
-            :class="options.length === 'Long' && 'option-active'"
-            @click="options.length = 'Long'">
+            :class="options.length === ELength.LONG && 'option-active'"
+            @click="options.length = ELength.LONG">
             Long
           </button>
-          <button class="option" :class="options.length === 'All' && 'option-active'" @click="options.length = 'All'">All</button>
+          <button class="option" :class="options.length === ELength.ALL && 'option-active'" @click="options.length = ELength.ALL">
+            All
+          </button>
           <button
             class="option option-right"
-            :class="options.length === 'Short' && 'option-active'"
-            @click="options.length = 'Short'">
+            :class="options.length === ELength.SHORT && 'option-active'"
+            @click="options.length = ELength.SHORT">
             Short
           </button>
         </div>
+      </div>
+      <button class="primary" @click="computeSelectedNames">Find Names</button>
+      <div>
+        {{ selectedNames }}
       </div>
     </div>
   </div>
@@ -126,5 +150,16 @@ h1 {
 .option-active {
   background: #f95759;
   color: #fff;
+}
+
+.primary {
+  background-color: #f95759;
+  color: #fff;
+  border-radius: 6.5rem;
+  padding: 0.75rem 4rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  border: 0;
 }
 </style>
